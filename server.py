@@ -1,4 +1,5 @@
 import os
+import subprocess
 from flask import Flask, flash, request, redirect, url_for,send_file
 from werkzeug.utils import secure_filename
 
@@ -45,8 +46,8 @@ def upload_file():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     
-     path_to_file = UPLOAD_FOLDER+"/"+filename
-
+     subprocess.Popen("python trans.py --sname "+UPLOAD_FOLDER+"/"+filename,shell=True)
+     path_to_file = "final_output/1.mid"  
      return send_file(
          path_to_file, 
          mimetype="audio/wav", 
@@ -57,5 +58,14 @@ def uploaded_file(filename):
 if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.mkdir(UPLOAD_FOLDER)
+    if not os.path.exists("./output"):
+        os.mkdir("./output")
+    if not os.path.exists("./data"):
+        os.mkdir("./data")
+    if not os.path.exists("./sample_outputs"):
+        os.mkdir("./sample_outputs")
+    if not os.path.exists("./final_output"):
+        os.mkdir("./final_output")
+            
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
